@@ -235,6 +235,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 GWL_STYLE,
                 WS_TABSTOP | WS_CHILD | WS_VISIBLE);
 
+            auto windowId = winrt::GetWindowFromWindowId(windowInfo->DesktopWindowXamlSource.SiteBridge().WindowId());
+            auto oldExStyle = GetWindowLong(windowId, GWL_EXSTYLE);
+            SetWindowLongW(windowId, GWL_EXSTYLE, oldExStyle | WS_EX_LAYERED);
+
             // Put a new instance of our Xaml "MainPage" into our island.  This is our UI content.
             windowInfo->DesktopWindowXamlSource.Content(winrt::make<winrt::SimpleIslandApp::implementation::MainPage>());
 
@@ -268,7 +272,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
             if (windowInfo->DesktopWindowXamlSource)
             {
-                windowInfo->DesktopWindowXamlSource.SiteBridge().MoveAndResize({ 10, 60, width - 20, height - 120 });
+                windowInfo->DesktopWindowXamlSource.SiteBridge().MoveAndResize({ 10, 0, width - 20, height });
             }
         }
         break;
